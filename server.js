@@ -7,6 +7,7 @@ const mongoose = require('mongoose')
 
 const User = require('./app/models/user')
 const apiRoute = require('./app/routes/api')
+const apiMiddleware = require('./app/middlewares/api.middleware')
 
 const app = express()
 
@@ -43,7 +44,7 @@ app.get('/setup', async (req, res) => {
 	}
 })
 
-app.use('/api', apiRoute)
+app.use('/api', apiMiddleware.verifyToken, apiRoute)
 
 app.listen(port, () => 
 	console.log(`Server is running on port ${port}.`)

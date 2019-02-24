@@ -10,7 +10,7 @@ module.exports.getUsers = async (req, res) => {
 	res.json(users)
 }
 
-module.exports.login = async (req, res) => {
+module.exports.authenticate = async (req, res) => {
 	try {
 		const { username, password } = req.body
 		const user = await User.findOne({ username })
