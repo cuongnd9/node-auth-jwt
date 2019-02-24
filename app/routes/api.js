@@ -1,56 +1,13 @@
 const express = require('express')
-const jwt = require('jsonwebtoken')
 
-const User = require('../models/user')
+const controller = require('../controllers/api.controller')
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
-	res.json({ message: 'Welcome to awesome API' })
-})
+router.get('/', controller.index)
 
-router.get('/users', async (req, res) => {
-	const users = await User.find()
-	res.json(users)
-})
+router.get('/users', controller.getUsers)
 
-router.post('/authenticate', async (req, res) => {
-	try {
-		const { username, password } = req.body
-		const user = await User.findOne({ username })
-
-		if (!user) {
-			res.json({ 
-				success: false, 
-				message: 'athentication failed! user not found.'
-			})
-			return
-		}
-
-		if (user.password !== password) {
-			res.json({ 
-				success: false, 
-				message: 'athentication failed! wrong password.'
-			})
-			return
-		}
-
-		const payload = { admin: user.isAdmin }
-		const secretKey = process.env.SECRET
-		const token = jwt.sign(
-			payload, 
-			secretKey, 
-			{ expiresIn: '1h' }
-		)
-
-		res.json({
-			success: true,
-			message: 'token is created!',
-			token
-		})
-	} catch(err) {
-		throw err
-	}
-})
+router.post('/login', controller.login)
 
 module.exports = router
